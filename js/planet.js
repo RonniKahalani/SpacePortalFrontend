@@ -1,25 +1,32 @@
 'use strict'
-
-//import Renderer from './renderer';
-
+/**
+ * Handles the Planet UI
+ */
 class PlanetRenderer {
-    //class PlanetRenderer extends Renderer {
     endpointUrl = 'http://localhost:8080/api/v1/planets';
 
+    /**
+     * Constructor
+     * @param {*} data 
+     */
     constructor(data) {
-        //super();
         this.data = data;
         this.fetchData();
     }
 
-    getById(id) {
-       let result = this.data.filter(obj => {
-            return obj.id === id
-        });
-        
-        return result[0];
-    }
+    /**
+     * Fetches Json from REST service endpoint url.
+     */
+    async fetchData() {
+        let response = await fetch(this.endpointUrl);
+        this.data = await response.json();
+        this.updateUI();
+        this.setPlanetData(3);
+    };
 
+    /**
+     * Updates related UI components
+     */
     updateUI() {
         for (let dataIndex in this.data) {
             let entry = this.data[dataIndex];
@@ -30,19 +37,20 @@ class PlanetRenderer {
 
         let planetDropdown = $("#reservation-planet");
         this.data.forEach(element => {
-            
+
             planetDropdown.append($("<option />").val(element.id).text(element.name));
         });
 
         reservationRenderer.setPlanetImage(this.data[0].imageUrl);
     }
 
-    async fetchData() {
-        let response = await fetch(this.endpointUrl);
-        this.data = await response.json();
-        this.updateUI();
-        this.setPlanetData(3);
-  };
+    getById(id) {
+        let result = this.data.filter(obj => {
+            return obj.id === id
+        });
+
+        return result[0];
+    }
 
     setPlanetData(index) {
         let entry = this.data[index];
@@ -68,6 +76,4 @@ class PlanetRenderer {
         $("#planet-data").show();
     }
 }
-//export default PlanetRenderer
-
 var planetRenderer = new PlanetRenderer();

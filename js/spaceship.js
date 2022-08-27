@@ -1,25 +1,20 @@
 'use strict'
 
-//import Renderer from './renderer';
-
 class SpaceshipRenderer {
-    //class SpaceshipRenderer extends Renderer {
     endpointUrl = 'http://localhost:8080/api/v1/spaceships';
 
     constructor(data) {
-        //super();
         this.data = data;
         this.fetchData();
     }
 
-    getById(id) {
-        let result = this.data.filter(obj => {
-            return obj.id === id
-        });
+    async fetchData() {
+        let response = await fetch(this.endpointUrl);
+        this.data = await response.json();
+        this.updateUI();
+        this.setSpaceshipData(0, false, false);
+    };
 
-        return result[0];
-    }
-    
     updateUI() {
         for (let dataIndex in this.data) {
             let entry = this.data[dataIndex];
@@ -35,12 +30,13 @@ class SpaceshipRenderer {
         reservationRenderer.setSpaceshipImage(this.data[0].imageUrl);
     }
 
-    async fetchData() {
-        let response = await fetch(this.endpointUrl);
-        this.data = await response.json();
-        this.updateUI();
-        this.setSpaceshipData(0, false, false);
-    };
+    getById(id) {
+        let result = this.data.filter(obj => {
+            return obj.id === id
+        });
+
+        return result[0];
+    }
 
     setSpaceshipData(index, imageToo = false, show = true) {
         let entry = this.data[index];
@@ -50,16 +46,14 @@ class SpaceshipRenderer {
         $("#spaceship-max-load").text(entry.maxLoad);
         $("#spaceship-builddate").text(new Date(entry.buildDate).toLocaleDateString());
 
-        if(imageToo) {
+        if (imageToo) {
             $("#top-notes").text(entry.notes);
             $("body").css('background-image', 'url(../' + entry.imageUrl + ')');
             $("body").css('background-repeat', 'no-repeat');
         }
-        if(show) {
+        if (show) {
             $("#spaceship-data").fadeIn();
         }
     }
 }
-//export default SpaceshipRenderer
-
 var spaceshipRenderer = new SpaceshipRenderer();

@@ -8,6 +8,8 @@
         }
 }
 
+
+
 @keyframes blinker {
         from {
                 opacity: 1.0;
@@ -18,26 +20,21 @@
         }
 }
 
-.connecting {
-        -webkit-animation-name: blinker;
-        animation-name: blinker;
-        -webkit-animation-iteration-count: infinite;
-        animation-iteration-count: infinite;
-        -webkit-animation-timing-function: cubic-bezier(.5, 0, 1, 1);
-        animation-timing-function: cubic-bezier(.5, 0, 1, 1);
-        -webkit-animation-duration: 1.7s;
-        animation-duration: 1, 7s;
-}
-
 header {
         color: white;
         background-color: black;
 }
 
-
-#status {
-
+body {
+        background-color: #000000;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-position: 0px 200px;
+        font-size: 14px;
 }
+
+/* Missplaced / unintuitive names*/
+#status {}
 
 #goto {
         width: 250px;
@@ -70,13 +67,10 @@ header {
         half of the elements width */
 }
 
-.meadia {
-        width: 600px;
-        height: 500px;
-}
 
 #reservation {}
 
+/* Buttons */
 #btn-reservation {}
 
 #btn-prev {}
@@ -85,6 +79,23 @@ header {
 
 #btn-card {
         float: right;
+}
+
+/* Classes */
+.connecting {
+        -webkit-animation-name: blinker;
+        animation-name: blinker;
+        -webkit-animation-iteration-count: infinite;
+        animation-iteration-count: infinite;
+        -webkit-animation-timing-function: cubic-bezier(.5, 0, 1, 1);
+        animation-timing-function: cubic-bezier(.5, 0, 1, 1);
+        -webkit-animation-duration: 1.7s;
+        animation-duration: 1, 7s;
+}
+
+.meadia {
+        width: 600px;
+        height: 500px;
 }
 
 .spinner-border {
@@ -96,15 +107,14 @@ header {
 }
 
 #top-notes {
-        text-align:left;
-        color:white;
+        text-align: left;
+        color: white;
         font-size: 14pt;
         height: 50px;
 }
 
-#planet {
-     
-}
+/* Planet */
+#planet {}
 
 #planet a {
         text-align: center;
@@ -112,38 +122,47 @@ header {
 }
 
 #planet-name {
-        color:white;
+        color: white;
 }
 
 #planet-mass {
-        text-align:right;
+        text-align: right;
 }
+
 #planet-type {
-        text-align:right;
+        text-align: right;
 }
+
 #planet-diameter {
-        text-align:right;
+        text-align: right;
 }
+
 #planet-density {
-        text-align:right;
+        text-align: right;
 }
+
 #planet-gravity {
-        text-align:right;
+        text-align: right;
 }
+
 #planet-hoursperday {
-        text-align:right;
+        text-align: right;
 }
+
 #planet-distance {
-        text-align:right;
+        text-align: right;
 }
+
 #planet-diameter {
-        text-align:right;
+        text-align: right;
 }
+
 #planet-meantemp {
-        text-align:right;
+        text-align: right;
 }
+
 #planet-moons {
-        text-align:right;
+        text-align: right;
 }
 
 #planet-data {
@@ -151,29 +170,29 @@ header {
 }
 
 .planet {
-        text-align:center;
-        color:white;
+        text-align: center;
+        color: white;
 }
+
 .planet-image {
         width: 50px;
         height: 50px;
-        
-}
-.planet-image:hover {
-        -webkit-filter:brightness(150%);
-        filter:brightness(150%);
+
 }
 
-/*
-        Spaceship
-*/
+.planet-image:hover {
+        -webkit-filter: brightness(150%);
+        filter: brightness(150%);
+}
+
+/* Spaceship */
 #spaceship {
-        color:white;
+        color: white;
 }
 
 #spaceship-data {
-        color:white;
-        display:none;
+        color: white;
+        display: none;
 }
 
 #spaceship a {
@@ -182,41 +201,41 @@ header {
 }
 
 #spaceship-name {
-        color:white;
+        color: white;
 }
+
 #spaceship-max-passengers {
-        text-align:right;
+        text-align: right;
 }
+
 #spaceship-max-speed {
-        text-align:right;
+        text-align: right;
 }
+
 #spaceship-max-load {
-        text-align:right;
+        text-align: right;
 }
+
 #spaceship-builddate {
-        text-align:right;
+        text-align: right;
 }
+
 .spaceship {
-        text-align:center;
-        color:white;
+        text-align: center;
+        color: white;
 }
+
 .spaceship-image {
         width: 50px;
         height: 50px;
-        
-}
-.spaceship-image:hover {
-        -webkit-filter:brightness(150%);
-        filter:brightness(150%);
+
 }
 
-body {
-        background-color: #000000;
-        background-repeat: no-repeat;
-        background-attachment: fixed;
-        background-position: 0px 200px; 
-        font-size: 14px;
+.spaceship-image:hover {
+        -webkit-filter: brightness(150%);
+        filter: brightness(150%);
 }
+
 
 .fixed-header tbody {
         display: block;
@@ -229,11 +248,10 @@ body {
         display: block;
 }
 
-#iss {
-}
+#iss {}
 
 #iss-data {
-        color:white;
+        color: white;
         display: none;
 }
 
@@ -244,35 +262,43 @@ body {
 
 
 #iss-latitude {
-        text-align:right;
+        text-align: right;
 }
 
 #iss-longitude {
-        text-align:right;
+        text-align: right;
 }
+
 #iss-altitude {
-        text-align:right;
+        text-align: right;
 }
+
 #iss-velocity {
-        text-align:right;
+        text-align: right;
 }
+
 #iss-visibility {
-        text-align:right;
+        text-align: right;
 }
+
 #iss-footprint {
-        text-align:right;
+        text-align: right;
 }
+
 #iss-daynum {
-        text-align:right;
+        text-align: right;
 }
+
 #iss-solar-lon {
-        text-align:right;
+        text-align: right;
 }
+
 #iss-solar-lat {
-        text-align:right;
+        text-align: right;
 }
+
 #iss-units {
-        text-align:right;
+        text-align: right;
 }
 
 
@@ -282,56 +308,52 @@ body {
 #headline {
         color: white;
 }
+
 h5 {
         text-align: center;
 }
 
 #messages {
         color: black;
-        min-height:200px;
+        min-height: 200px;
 }
 
-.socket-msg {
+.socket-msg {}
 
-}
+.socket-user {}
 
-.socket-user {
-
-}
 .panel-title {
         text-align: left;
 }
+
 .socket-image {
-        width : 100px;
+        width: 100px;
         vertical-align: middle;
         margin: 5px;
 }
 
-.socket-link {
+.socket-link {}
 
+.scrollbar::-webkit-scrollbar-track {
+        border-radius: 10px;
+        background-color: #F5F5F5;
 }
 
-.scrollbar::-webkit-scrollbar-track
-{
-    border-radius: 10px;
-    background-color: #F5F5F5;
+.scrollbar::-webkit-scrollbar {
+        width: 12px;
+        background-color: #F5F5F5;
 }
 
-.scrollbar::-webkit-scrollbar
-{
-    width: 12px;
-    background-color: #F5F5F5;
+.scrollbar::-webkit-scrollbar-thumb {
+        border-radius: 10px;
+        background-color: #0d6efd;
 }
 
-.scrollbar::-webkit-scrollbar-thumb
-{
-    border-radius: 10px;
-    background-color: #0d6efd;
-}
 .input-group-append {
         cursor: pointer;
-      }
+}
 
-      .modal-dialog {
-        max-width: 700px; /* New width for default modal */
-      }
+.modal-dialog {
+        max-width: 700px;
+        /* New width for default modal */
+}

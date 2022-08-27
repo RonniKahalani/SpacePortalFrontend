@@ -1,25 +1,29 @@
-//'use strict'
-
-//import Renderer from './renderer';
+'use strict'
 
 class ApodRenderer {
-    //class ApodRenderer extends Renderer {
     endpointUrl = 'https://api.nasa.gov/planetary/apod?api_key=0xBWwWrQ3fosBO3mfognfipbqRDMeWUQb40DxwcS&start_date=2022-05-28';
 
+    /**
+     * Constructor
+     */
     constructor() {
-        //super();
         this.data = null;
         this.dataIndex = 0;
         this.fetchData();
     }
 
+    /**
+     * Fetches Json from REST service endpoint url.
+     */
     async fetchData() {
         let response = await fetch(this.endpointUrl);
         this.data = await response.json();
         this.updateUI();
     };
 
-
+    /**
+     * Updates related UI components
+     */
     updateUI() {
         this.updateButtonStates();
         this.updateStatus();
@@ -28,6 +32,9 @@ class ApodRenderer {
 
     }
 
+    /**
+     * Updates a card
+     */
     updateCard() {
         $('#spinner').fadeOut();
 
@@ -80,6 +87,4 @@ class ApodRenderer {
         return this.data[this.dataIndex];
     }
 }
-//export default ApodRenderer
-
 var apodRenderer = new ApodRenderer();

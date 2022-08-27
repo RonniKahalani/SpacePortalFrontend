@@ -1,29 +1,28 @@
 'use strict'
-
-//import Renderer from './renderer';
-
+/**
+ * Handles the ISS UI
+ */
 class ISSRenderer {
-    //class ISSRenderer extends Renderer {
     endpointUrl = 'https://api.wheretheiss.at/v1/satellites/25544';
 
     constructor(data) {
-        //super();
         this.data = data;
         this.fetchData();
         setInterval(this.doAutoFetch, 500)
     }
 
-    showMap() {
+    /**
+     * Fetches Json from REST service endpoint url.
+     */
+    async fetchData() {
+        let response = await fetch(this.endpointUrl);
+        this.data = await response.json();
+        this.updateUI();
+    };
 
-        let url = `https://www.google.com/maps/@?api=1&map_action=map&center=${this.data.latitude},${this.data.longitude}&zoom=0&basemap=satellite&embedded=true`;
-        window.open(url,'_blank');
-    }
-    doAutoFetch() {
-        if ($('#iss-autofetch').prop('checked')) {
-            issRenderer.fetchData();
-        }
-    }
-
+    /**
+     * Updates related UI components
+     */
     updateUI() {
         $('#iss').append(`<div class="col iss"></div>`);
         $("#iss-latitude").text(this.data.latitude);
@@ -39,12 +38,21 @@ class ISSRenderer {
         $("#iss-units").text(this.data.units);
     }
 
-    async fetchData() {
-        let response = await fetch(this.endpointUrl);
-        this.data = await response.json();
-        this.updateUI();
-    };
-}
-//export default ISSRenderer
+    /**
+     * Shows the ISS position on a Google Map
+     */
+    showMap() {
+        let url = `https://www.google.com/maps/@?api=1&map_action=map&center=${this.data.latitude},${this.data.longitude}&zoom=0&basemap=satellite&embedded=true`;
+        window.open(url,'_blank');
+    }
 
+    /**
+     * Used when auto fetch is active
+     */
+    doAutoFetch() {
+        if ($('#iss-autofetch').prop('checked')) {
+            issRenderer.fetchData();
+        }
+    }
+}
 var issRenderer = new ISSRenderer();

@@ -1,16 +1,19 @@
 'use strict'
 
-//import Renderer from '../js/renderer';
-
 class SpaceXLaunchRenderer {
-    //class SpaceXLaunchRenderer extends Renderer {
     endpointUrl = 'https://api.spacexdata.com/v2/launches';
 
     constructor() {
-        //super();
         this.data = null;
         this.fetchData();
     }
+
+    async fetchData() {
+        let response = await fetch(this.endpointUrl);
+        this.data = await response.json();
+        this.data.reverse();
+        this.updateUI();
+    };
 
     updateUI() {
         for (let dataIndex in this.data) {
@@ -37,14 +40,5 @@ class SpaceXLaunchRenderer {
         $("#table-spacex").fadeIn("slow");
 
     }
-
-    async fetchData() {
-        let response = await fetch(this.endpointUrl);
-        this.data = await response.json();
-        this.data.reverse();
-        this.updateUI();
-    };
 }
-//export default SpaceXLaunchRenderer
-
 var spaceXLaunchRenderer = new SpaceXLaunchRenderer();
