@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Space Portal</title>
+
+    <!-- Remote stylesheets -->
+    <link media="all" href="https://fonts.googleapis.com/css?family=Roboto:300,400&display=swap" rel="stylesheet">
+    <link media="all" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500&display=swap" rel="stylesheet">
+    <link media="all" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link media="all" href="../css/main.css" rel="stylesheet">
+
+    <!-- Remote JavaScripts -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
+
+    <!-- Using npm resources
+    <link href="../../node_modules/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
+    <link href="../../node_modules/bootstrap-datepicker/dist/css/bootstrap-datepicker.css" rel="stylesheet">
+    <link href="../../css/main.css" rel="stylesheet">
+    
+    <script type="text/javascript" src="../../node_modules/moment/dist/moment.js"></script>
+    <script type="text/javascript" src="../../node_modules/jquery/dist/jquery.js"></script>
+    <script type="text/javascript" src="../../node_modules/jquery-ui/dist/jquery-ui.js"></script>
+    <script type="text/javascript" src="../../node_modules/bootstrap/dist/js/bootstrap.js"></script>
+    <script type="text/javascript" src="../../node_modules/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+    -->
+
+    <!-- Local scripts -->
+    <script type="text/javascript" src="../js/apod.js"></script>
+    <script type="text/javascript" src="../js/spacex.js"></script>
+    <script type="text/javascript" src="../js/planet.js"></script>
+    <script type="text/javascript" src="../js/spaceship.js"></script>
+    <script type="text/javascript" src="../js/customer.js"></script>
+    <script type="text/javascript" src="../js/reservation.js"></script>
+    <script type="text/javascript" src="../js/iss.js"></script>
+    <script type="text/javascript" src="../js/client.js"></script>
+    <script type="text/javascript" src="../js/scraping.js"></script>
+    <script type="text/javascript" src="../js/app.js"></script>
+
+    <script type="text/javascript">
+        // Called when the document has fully loaded.
+        $(document).ready(function () {
+
+            // Setup action when the ENTER key is pressed, to submit a socket message
+            $("#message").on('keyup', function (e) {
+
+                let isDisabled = this.value.length == 0;
+                let btn = $('#message-button');
+                btn.prop('disabled', isDisabled);
+
+                if (e.key == 'Enter') {
+                    socketClient.send(userId, $('#message').val(), $('#image').val(), $('#link').val());
+                }
+
+            });
+
+            // Make sure the socket connection gets closed.
+            window.addEventListener("unload", function () {
+                let ws = socketClient.ws;
+                if (ws.readyState == WebSocket.OPEN)
+                    ws.close();
+            });
+
+            console.log("Ready!");
+        });
+    </script>
+</head>
+
+<body>
+    <div class="row container-fluid p-5 text-white;">
+        <!-- Top -->
+        <div id="headline" class="row col">
+            <div class="col">
+                <div>
+                    <h1 class="text-nowrap">The Space Portal</h1>
+                    <button type="button" class="btn-sm btn-primary text-nowrap"
+                        onclick="$('#spacex-launches').toggle()">SpaceX Launches</button>
+                    <button type="button" class="btn-sm btn-primary text-nowrap"
+                        onclick="$('#apod').toggle()">Apod</button>
+                    <button id="btn-reservation" type="button" class="text-nowrap btn-sm btn-primary"
+                        data-bs-toggle="modal" data-bs-target="#reservation">Reservation</button>
+                </div>
+
+            </div>
+            <div class="col-9">
+                <div id="top-notes"></div>
+            </div>
+        </div>
+
+
+        <!-- Content-->
+        <div class="row">
+            <div class="col m-4">
+
+                <!-- Apod -->
+                <div id="apod" class="container" style="display:none;">
+                    <div class="row mt-1">
+
+                        <div id="apod-card" class="col card rounded">
+                            <div class="panel-heading mt-3">
+                                <button type="button" class="btn-close float-end" onclick="$('#apod').toggle()"></button>
+                                <h3 class="panel-title">Astronomy Picture of the Day</h3>
+
+                            </div>
+                            <div id="apod-card-body" class="card-body">
+                                <div class="cpanel-body">
+                                    <div id="spinner-apod" class="spinner-border" role="status">
+                                        <span class="sr-only"></span>
+                                    </div>
+                                    <div class="row">
+                                        <div id="apod-card-media" class="col"></div>
+                                        <div class="col">
+                                            <div id="btn-panel">
+                                                <div class="row">
+                                                    <div class="col btn-group" style="text-align: right;">
+                                                        <button id="btn-prev" class="btn-sm btn-primary"
+                                                            onclick="apodRenderer.prev()">Prev</button>
+                                                        <span id="status"
+                                                            class="col btn btn-dark waitingForConnection"></span>
+                                                        <button id="btn-next" class="btn-sm btn-primary"
+                                                            onclick="apodRenderer.next()">Next</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div id="apod-card-date"></div>
+                                            <h5 id="apod-card-title"></h5>
+                                            <p id="apod-card-text"></p>
+                                            <button id="apod-card-anchor" class="btn-sm btn-primary" style="float:right;">
+                                                View
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SpaceX Launches -->
+                <div id="spacex-launches" class="container" style="display:none;">
+                    <div class="row mt-1">
+
+                        <div id="card" class="col card rounded">
+                            <div class="panel-heading mt-3">
+                                <button type="button" class="btn-close float-end" onclick="$('#spacex-launches').toggle()"></button>
+
+                                <h3 class="panel-title">SpaceX Launches</h3>
+                            </div>
+
+                            <table id="table-spacex" class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col"></th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Date</th>
+                                        <th scope="col">Rocket</th>
+                                        <th scope="col">Launch Site</th>
+                                        <th scope="col">Video</th>
+                                        <th scope="col">Image</th>
+                                        <th scope="col">Wikipedia</th>
+                                        <th scope="col">Article</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="spacex"></tbody>
+                            </table>
+
+                            <div id="spinner-spacex" class="spinner-border" role="status">
+                                <span class="sr-only"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+            <!-- Sidebar -->
+            <div class="container col-3 m-4 p-4 rounded btn-dark" style="border:solid rgba(0, 47, 255, 0.322) 1px;">
+
+                <!-- Tab buttons -->
+                <div class="row" style="margin-bottom: 3px;">
+                    <button type="button" class="col-4 btn-sm btn-primary"
+                        onclick="tabRenderer.showTab('sidebar-tab', 'planet-data')">Planets</button>
+                    <button type="button" class="col-4 btn-sm btn-primary"
+                        onclick="tabRenderer.showTab('sidebar-tab', 'spaceship-data')">Spaceships</button>
+                    <button type="button" class="col-4 btn-sm btn-primary"
+                        onclick="tabRenderer.showTab('sidebar-tab','iss-data')">ISS</button>
+                    <div>&nbsp;</div>
+                </div>
+
+
+                <!-- Planet Data -->
+                <div id="planet-data" class="row sidebar-tab">
+                    <h5>Planets</h5>
+                    <div id="planet" class="row m-0 p-0"></div>
+                    <h5 id="planet-name" class="mt-3"></h5>
+
+                    <div class="row m-0 p-0">
+
+                        <table class="table w-100" style="color:white;">
+                            <tr style="margin:0px;">
+                                <th>Type</th>
+                                <td id="planet-type"></td>
+                            </tr>
+                            <tr>
+                                <th>Mass (10<sub>24</sub>kg)</th>
+                                <td id="planet-mass"></td>
+                            </tr>
+                            <tr>
+                                <th>Diameter (km)</th>
+                                <td id="planet-diameter" style="text-align:right;"></td>
+                            </tr>
+                            <tr>
+                                <th>Density (km/m<sup>3</sup>)</th>
+                                <td id="planet-density" style="text-align:right;"></td>
+                            </tr>
+                            <tr>
+                                <th>Gravity (m/s<sup>2</sup>)</th>
+                                <td id="planet-gravity" style="text-align:right;"></td>
+                            </tr>
+                            <tr>
+                                <th>Hours per day</th>
+                                <td id="planet-hoursperday" style="text-align:right;"></td>
+                            </tr>
+                            <tr>
+                                <th>From Sun (10<sup>6</sup>km)</th>
+                                <td id="planet-distance" style="text-align:right;margin-right:20px;"></td>
+                            </tr>
+                            <tr>
+                                <th>Mean temp. (&deg;C)</th>
+                                <td id="planet-meantemp" style="text-align:right;"></td>
+                            </tr>
+                            <tr>
+                                <th>Moons</th>
+                                <td id="planet-moons" style="text-align:right;"></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Spaceships -->
+                <div id="spaceship-data" class="row sidebar-tab" style="display:none;">
+                    <h5>Spaceships</h5>
+                    <div id="spaceship" class="row m-0 p-0"></div>
+                    <h5 id="spaceship-name" class="m-3"></h5>
+
+                    <div class="row m-0 p-0">
+                        <table class="table w-100" style="color:white;">
+                            <tr style="margin:0px;">
+                                <th>Max Passengers</th>
+                                <td id="spaceship-max-passengers"></td>
+                            </tr>
+                            <tr style="margin:0px;">
+                                <th>Max Speed</th>
+                                <td id="spaceship-max-speed"></td>
+                            </tr>
+                            <tr style="margin:0px;">
+                                <th>Max Load</th>
+                                <td id="spaceship-max-load"></td>
+                            </tr>
+                            <tr style="margin:0px;">
+                                <th>Build Date</th>
+                                <td id="spaceship-builddate"></td>
+                            </tr>
+
+                        </table>
+                    </div>
+                </div>
+
+                <!-- ISS -->
+                <div id="iss-data" class="row sidebar-tab" style="display:none;">
+
+                    <div id="iss" class="m-0 p-0">
+                        <div class="row">
+                            <img id="iss-image" class="mx-auto" src="../media/iss/iss.png">
+                        </div>
+                        <h5>International Space Station (ISS)</h5>
+
+                        <div class="row m-0 p-0">
+
+                            <table class="table w-100" style="color:white;">
+                                <tr>
+                                    <th>Latitude</th>
+                                    <td id="iss-latitude"></td>
+                                </tr>
+                                <tr>
+                                    <th>Longitude</th>
+                                    <td id="iss-longitude"></td>
+                                </tr>
+                                <tr>
+                                    <th>Altitude</th>
+                                    <td id="iss-altitude"></td>
+                                </tr>
+                                <tr>
+                                    <th>Velocity</th>
+                                    <td id="iss-velocity"></td>
+                                </tr>
+                                <tr>
+                                    <th>Visibility</th>
+                                    <td id="iss-visibility"></td>
+                                </tr>
+                                <tr>
+                                    <th>Footprint</th>
+                                    <td id="iss-footprint"></td>
+                                </tr>
+                                <tr>
+                                    <th>Day num.</th>
+                                    <td id="iss-daynum"></td>
+                                </tr>
+                                <tr>
+                                    <th>Solar Lon</th>
+                                    <td id="iss-solar-lon"></td>
+                                </tr>
+                                <tr>
+                                    <th>Solar Lat</th>
+                                    <td id="iss-solar-lat"></td>
+                                </tr>
+                                <tr>
+                                    <th>Units</th>
+                                    <td id="iss-units"></td>
+                                </tr>
+                            </table>
+                            <!-- Default unchecked -->
+                            <div class="custom-control custom-checkbox">
+                                <div class="w-100">
+                                    <input id="iss-autofetch" type="checkbox" class="custom-control-input">
+                                    <label class="custom-control-label" for="iss-autofetch">Update
+                                        automatically.</label>
+                                </div>
+                            </div>
+                            <button type="button" class="btn-sm btn-primary mt-1"
+                                onclick="issRenderer.fetchData()">Update</button><button type="button"
+                                class="btn-sm btn-primary mt-1" onclick="issRenderer.showMap()">Map</button>
+                        </div>
+                    </div>
+                </div>
+            </div> <!-- End Sidebar -->
+
+
+            <!-- Reservation Modal -->
+            <div class="modal fade" id="reservation" tabindex="-1" aria-labelledby="example-modal-label"
+                aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="example-modal-label">Reservation</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="button-group p-2">
+                            <button class="btn-sm btn-primary"
+                                onclick="tabRenderer.showTab('reservation-tab','reservation-info-tab')">Info</button>
+                            <button class="btn-sm btn-primary"
+                                onclick="tabRenderer.showTab('reservation-tab','reservation-date-tab')">Dates</button>
+                            <button class="btn-sm btn-primary"
+                                onclick="tabRenderer.showTab('reservation-tab', 'reservation-planet-tab')">Planet</button>
+                            <button class="btn-sm btn-primary"
+                                onclick="tabRenderer.showTab('reservation-tab', 'reservation-spaceship-tab')">Spaceship</button>
+                            <button class="btn-sm btn-primary"
+                                onclick="tabRenderer.showTab('reservation-tab', 'reservation-customer-tab')">Travellers</button>
+                        </div>
+                        <div class="modal-body">
+
+                            <div>
+                                <div>
+                                    <div id="reservation-info-tab" class="reservation-tab">
+                                        <button class="btn-sm btn-primary float-end"
+                                            onclick="tabRenderer.showTab('reservation-tab', 'reservation-date-tab')">&rightarrow;</button>
+                                        <button class="btn-sm btn-primary float-end"
+                                            onclick="tabRenderer.showTab('reservation-tab', 'reservation-customer-tab')">&leftarrow;</button>
+                                        <h4>Information</h4>
+                                        <div class="row">
+                                            <img src="../media/reservation/spacexstarship.jpg">
+                                        </div>
+                                        <p>So you want to go far far away into space.</p>
+                                        <p>Please think about the following
+                                        <ul>
+                                            <li>Are you ready to leave earth and your family?</li>
+                                            <li>Have you talked with your family and loved ones?</li>
+                                            <li>Your life might be at stake, and space can be very lonely.</li>
+                                        </ul>
+                                        </p>
+                                    </div>
+                                    <div id="reservation-date-tab" class="reservation-tab" style="display:none;">
+                                        <button class="btn-sm btn-primary float-end"
+                                            onclick="tabRenderer.showTab('reservation-tab', 'reservation-planet-tab')">&rightarrow;</button>
+                                        <button class="btn-sm btn-primary float-end"
+                                            onclick="tabRenderer.showTab('reservation-tab', 'reservation-info-tab')">&leftarrow;</button>
+                                        <h4>Dates</h4>
+                                        <p>Please select the period you want to travel.</p>
+                                        <div class="row">
+                                            <div class="col">
+                                                <label for="reservation-startdate" class="col">From</label>
+                                                <input id="reservation-startdate" data-format="yyyy-MM-dd hh:mm:ss"
+                                                    class="form-control col" type="date"></input>
+                                            </div>
+                                            <div class="col">
+                                                <label for="reservation-enddate" class="col">To</label>
+                                                <input id="reservation-enddate" data-format="yyyy-MM-dd hh:mm:ss"
+                                                    class="form-control col" type="date"></input>
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                        </div>
+                                    </div>
+
+                                    <div id="reservation-planet-tab" class="reservation-tab" style="display:none;">
+                                        <button class="btn-sm btn-primary float-end"
+                                            onclick="tabRenderer.showTab('reservation-tab', 'reservation-spaceship-tab')">&rightarrow;</button>
+                                        <button class="btn-sm btn-primary float-end"
+                                            onclick="tabRenderer.showTab('reservation-tab', 'reservation-date-tab')">&leftarrow;</button>
+
+                                        <h4>Planet</h4>
+                                        <label for="reservation-planet">
+                                            <p>Please select the planet you want to travel to.</p>
+                                        </label>
+                                        <select id="reservation-planet" class="form-control"
+                                            onchange="reservationRenderer.setPlanet(this.value)"></select>
+                                        <div class="row">
+
+                                            <img id="reservation-planet-image" src="">
+                                        </div>
+                                    </div>
+
+                                    <div id="reservation-spaceship-tab" class="reservation-tab" style="display:none;">
+                                        <button class="btn-sm btn-primary float-end"
+                                            onclick="tabRenderer.showTab('reservation-tab', 'reservation-customer-tab')">&rightarrow;</button>
+                                        <button class="btn-sm btn-primary float-end"
+                                            onclick="tabRenderer.showTab('reservation-tab', 'reservation-planet-tab')">&leftarrow;</button>
+
+                                        <h4>Spaceship</h4>
+                                        <label for="reservation-spaceship">
+                                            <p>Please select the spaceship you want to travel by.</p>
+                                        </label>
+                                        <select id="reservation-spaceship" class="form-control"
+                                            onchange="reservationRenderer.setSpaceship(this.value)"></select>
+                                        <div class="row">
+
+                                            <img id="reservation-spaceship-image" src="">
+                                        </div>
+                                    </div>
+
+                                    <div id="reservation-customer-tab" class="reservation-tab" style="display:none;">
+                                        <button class="btn-sm btn-primary float-end"
+                                            onclick="tabRenderer.showTab('reservation-tab', 'reservation-info-tab')">&rightarrow;</button>
+                                        <button class="btn-sm btn-primary float-end"
+                                            onclick="tabRenderer.showTab('reservation-tab', 'reservation-spaceship-tab')">&leftarrow;</button>
+
+                                        <h4>Travellers</h4>
+                                        <label for="reservation-customer">
+                                            <p>Please select the persons includeded in this
+                                                reservation.</p>
+                                        </label>
+                                        <select id="reservation-customer" class="form-control" multiple></select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-primary">Order</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Message -->
+            <div class="fixed-bottom" style="width:50%;">
+                <div class="row mt-1">
+                    <div id="card" class="col rounded btn-dark">
+                        <div id="message-heading" class="panel-heading row mt-2 mb-2">
+                            <div class="col">
+                                <h5 class="panel-title">Share a thought (<span id="message-count">0</span>)</h5>
+                            </div>
+                            <div class="col" style="text-align: right;color:white;">
+                                <button id="message-panel-button" type="button" class="col btn-primary"
+                                    onclick="$('#message-panel').toggle()">-</button>
+                            </div>
+
+                        </div>
+                        <div id="message-panel" style="display: none;">
+
+                            <div id="messages" class="container overflow-auto scrollbar" style="max-height:400px;">
+                            </div>
+
+                            <div class="row border m-2 rounded p-2">
+
+                                <div class="col">
+                                    <label for="message">Text</label><input id="message" class="w-100" name="message">
+                                    <label for="image">Image</label><input id="image" class="w-100" name="image">
+                                    <label for="link">Link</label><input id="link" class="w-100" name="link">
+                                </div>
+                                <div class="m-2">
+
+                                    <button id="message-button" type="submit" type="button"
+                                        class="btn-sm btn-primary float-end"
+                                        onclick="socketClient.send(userId, message.value, image.value, link.value)">Send</button>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div id="spaceflight"></div>
+</body>
+
+</html>

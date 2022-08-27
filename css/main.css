@@ -1,0 +1,337 @@
+@-webkit-keyframes blinker {
+        from {
+                opacity: 1.0;
+        }
+
+        to {
+                opacity: 0.0;
+        }
+}
+
+@keyframes blinker {
+        from {
+                opacity: 1.0;
+        }
+
+        to {
+                opacity: 0.0;
+        }
+}
+
+.connecting {
+        -webkit-animation-name: blinker;
+        animation-name: blinker;
+        -webkit-animation-iteration-count: infinite;
+        animation-iteration-count: infinite;
+        -webkit-animation-timing-function: cubic-bezier(.5, 0, 1, 1);
+        animation-timing-function: cubic-bezier(.5, 0, 1, 1);
+        -webkit-animation-duration: 1.7s;
+        animation-duration: 1, 7s;
+}
+
+header {
+        color: white;
+        background-color: black;
+}
+
+
+#status {
+
+}
+
+#goto {
+        width: 250px;
+        text-align: right;
+}
+
+#card {
+        width: 80%;
+        margin: 20px auto;
+        float: none;
+        margin-bottom: 10px;
+        opacity: .8;
+}
+
+#card-date {
+        text-align: right;
+}
+
+#spinner {
+        display: block;
+        position: fixed;
+        z-index: 1031;
+        /* High z-index so it is on top of the page */
+        top: 50%;
+        right: 50%;
+        /* or: left: 50%; 
+        margin-top: -..px;
+        half of the elements height 
+        margin-right: -..px;
+        half of the elements width */
+}
+
+.meadia {
+        width: 600px;
+        height: 500px;
+}
+
+#reservation {}
+
+#btn-reservation {}
+
+#btn-prev {}
+
+#btn-next {}
+
+#btn-card {
+        float: right;
+}
+
+.spinner-border {
+        margin: 0 auto;
+}
+
+.tiny {
+        font-size: 12px;
+}
+
+#top-notes {
+        text-align:left;
+        color:white;
+        font-size: 14pt;
+        height: 50px;
+}
+
+#planet {
+     
+}
+
+#planet a {
+        text-align: center;
+        color: white;
+}
+
+#planet-name {
+        color:white;
+}
+
+#planet-mass {
+        text-align:right;
+}
+#planet-type {
+        text-align:right;
+}
+#planet-diameter {
+        text-align:right;
+}
+#planet-density {
+        text-align:right;
+}
+#planet-gravity {
+        text-align:right;
+}
+#planet-hoursperday {
+        text-align:right;
+}
+#planet-distance {
+        text-align:right;
+}
+#planet-diameter {
+        text-align:right;
+}
+#planet-meantemp {
+        text-align:right;
+}
+#planet-moons {
+        text-align:right;
+}
+
+#planet-data {
+        color: white;
+}
+
+.planet {
+        text-align:center;
+        color:white;
+}
+.planet-image {
+        width: 50px;
+        height: 50px;
+        
+}
+.planet-image:hover {
+        -webkit-filter:brightness(150%);
+        filter:brightness(150%);
+}
+
+/*
+        Spaceship
+*/
+#spaceship {
+        color:white;
+}
+
+#spaceship-data {
+        color:white;
+        display:none;
+}
+
+#spaceship a {
+        text-align: center;
+        color: white;
+}
+
+#spaceship-name {
+        color:white;
+}
+#spaceship-max-passengers {
+        text-align:right;
+}
+#spaceship-max-speed {
+        text-align:right;
+}
+#spaceship-max-load {
+        text-align:right;
+}
+#spaceship-builddate {
+        text-align:right;
+}
+.spaceship {
+        text-align:center;
+        color:white;
+}
+.spaceship-image {
+        width: 50px;
+        height: 50px;
+        
+}
+.spaceship-image:hover {
+        -webkit-filter:brightness(150%);
+        filter:brightness(150%);
+}
+
+body {
+        background-color: #000000;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-position: 0px 200px; 
+        font-size: 14px;
+}
+
+.fixed-header tbody {
+        display: block;
+        overflow: auto;
+        height: 200px;
+        width: 100%;
+}
+
+.fixed_header thead tr {
+        display: block;
+}
+
+#iss {
+}
+
+#iss-data {
+        color:white;
+        display: none;
+}
+
+#iss-image {
+        width: 300px;
+        text-align: center;
+}
+
+
+#iss-latitude {
+        text-align:right;
+}
+
+#iss-longitude {
+        text-align:right;
+}
+#iss-altitude {
+        text-align:right;
+}
+#iss-velocity {
+        text-align:right;
+}
+#iss-visibility {
+        text-align:right;
+}
+#iss-footprint {
+        text-align:right;
+}
+#iss-daynum {
+        text-align:right;
+}
+#iss-solar-lon {
+        text-align:right;
+}
+#iss-solar-lat {
+        text-align:right;
+}
+#iss-units {
+        text-align:right;
+}
+
+
+
+
+
+#headline {
+        color: white;
+}
+h5 {
+        text-align: center;
+}
+
+#messages {
+        color: black;
+        min-height:200px;
+}
+
+.socket-msg {
+
+}
+
+.socket-user {
+
+}
+.panel-title {
+        text-align: left;
+}
+.socket-image {
+        width : 100px;
+        vertical-align: middle;
+        margin: 5px;
+}
+
+.socket-link {
+
+}
+
+.scrollbar::-webkit-scrollbar-track
+{
+    border-radius: 10px;
+    background-color: #F5F5F5;
+}
+
+.scrollbar::-webkit-scrollbar
+{
+    width: 12px;
+    background-color: #F5F5F5;
+}
+
+.scrollbar::-webkit-scrollbar-thumb
+{
+    border-radius: 10px;
+    background-color: #0d6efd;
+}
+.input-group-append {
+        cursor: pointer;
+      }
+
+      .modal-dialog {
+        max-width: 700px; /* New width for default modal */
+      }
