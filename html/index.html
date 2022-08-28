@@ -46,24 +46,10 @@
         $(document).ready(function () {
 
             // Setup action when the ENTER key is pressed, to submit a socket message
-            $("#message").on('keyup', function (e) {
-
-                let isDisabled = this.value.length == 0;
-                let btn = $('#message-button');
-                btn.prop('disabled', isDisabled);
-
-                if (e.key == 'Enter') {
-                    socketClient.send(userId, $('#message').val(), $('#image').val(), $('#link').val());
-                }
-
-            });
+            $("#message").on('keyup', (e) => socketClient.trackInputKey($("#message"), e));
 
             // Make sure the socket connection gets closed.
-            window.addEventListener("unload", function () {
-                let ws = socketClient.ws;
-                if (ws.readyState == WebSocket.OPEN)
-                    ws.close();
-            });
+            window.addEventListener("unload", () => socketClint.disconnect())
 
             console.log("Ready!");
         });

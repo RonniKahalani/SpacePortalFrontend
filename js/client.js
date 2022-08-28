@@ -1,7 +1,7 @@
 'use strict'
 
 class SocketClient {
-    
+
     endpointUrl = 'ws://localhost:3001';
 
     constructor() {
@@ -75,6 +75,25 @@ class SocketClient {
 
         } catch (error) {
             console.log(`Failed to send message:${packet}, with error: ${error}`);
+        }
+    }
+
+
+    trackInputKey(input, e) {
+        let isDisabled = input.val().length == 0;
+        let btn = $('#message-button');
+        btn.prop('disabled', isDisabled);
+
+        if (e.key == 'Enter') {
+            this.send(userId, $('#message').val(), $('#image').val(), $('#link').val());
+        }
+
+    }
+
+
+    disconnect() {
+        if (this.ws.readyState == WebSocket.OPEN) {
+            ws.close();
         }
     }
 }
