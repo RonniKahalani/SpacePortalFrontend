@@ -5,7 +5,7 @@ This project is the frontend to the [SpacePortalBackend](https://github.com/Ronn
 ## Technologies
 - HTML/CSS (for design markup)
 - jQuery / ES6 JavaScript (for dynamics)
-- Bootstrap (for UI/CSS design)
+- Bootstrap 5 (for UI/CSS design)
 - Node.js (for websocket medie chat for connected browsers)
 
 ## Purpose
