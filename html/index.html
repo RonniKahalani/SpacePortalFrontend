@@ -30,6 +30,7 @@
     -->
 
     <!-- Local scripts -->
+    <script type="text/javascript" src="../js/storage.js"></script>
     <script type="text/javascript" src="../js/apod.js"></script>
     <script type="text/javascript" src="../js/spacex.js"></script>
     <script type="text/javascript" src="../js/planet.js"></script>
@@ -48,8 +49,8 @@
             // Setup action when the ENTER key is pressed, to submit a socket message
             $("#message").on('keyup', (e) => socketClient.trackInputKey($("#message"), e));
 
-            // Make sure the socket connection gets closed.
-            window.addEventListener("unload", () => socketClint.disconnect())
+            // Make sure the socket connection gets closed, when the page unloads.
+            window.addEventListener("unload", () => socketClint.disconnect());
 
             console.log("Ready!");
         });

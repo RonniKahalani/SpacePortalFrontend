@@ -20,6 +20,7 @@
         }
 }
 
+/* HTML tag */
 header {
         color: white;
         background-color: black;
@@ -33,7 +34,11 @@ body {
         font-size: 14px;
 }
 
-/* Missplaced / unintuitive names*/
+h5 {
+        text-align: center;
+}
+
+/* Misc */
 #status {}
 
 #goto {
@@ -67,6 +72,10 @@ body {
         half of the elements width */
 }
 
+.spinner-border {
+        margin: 0 auto;
+}
+
 
 #reservation {}
 
@@ -96,10 +105,6 @@ body {
 .meadia {
         width: 600px;
         height: 500px;
-}
-
-.spinner-border {
-        margin: 0 auto;
 }
 
 .tiny {
@@ -248,10 +253,12 @@ body {
         display: block;
 }
 
-#iss {}
+#iss {
+        color: white;
+}
 
 #iss-data {
-        color: white;
+
         display: none;
 }
 
@@ -301,16 +308,8 @@ body {
         text-align: right;
 }
 
-
-
-
-
 #headline {
         color: white;
-}
-
-h5 {
-        text-align: center;
 }
 
 #messages {

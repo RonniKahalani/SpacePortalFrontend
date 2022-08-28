@@ -22,6 +22,7 @@ class PlanetRenderer {
         this.data = await response.json();
         this.updateUI();
         this.setPlanetData(3);
+        indexedStorage.setData(IDB_STORE_PLANETS, this.data);
     };
 
     /**

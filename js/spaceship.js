@@ -13,6 +13,7 @@ class SpaceshipRenderer {
         this.data = await response.json();
         this.updateUI();
         this.setSpaceshipData(0, false, false);
+        indexedStorage.setData(IDB_STORE_SPACESHIPS, this.data);
     };
 
     updateUI() {

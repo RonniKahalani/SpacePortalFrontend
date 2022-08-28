@@ -1,103 +1,136 @@
 'use strict'
 
+var IDB_DATABASE_NAME = "spaceportal";
+var IDB_DATABASE_VERSION = 1;
+var IDB_STORE_PLANETS = "planets";
+var IDB_STORE_SPACESHIPS = "spaceships";
+var IDB_STORE_CUSTOMERS = "customers";
+var IDB_INDEX_DEFAULT_ID = "id";
+
 class IndexedStorage {
+
     constructor() {
-        
+        this.data = new Map();
+        this.ready = false;
+        this.db = null;
+
         if (!window.indexedDB) {
             console.log(`Your browser doesn't support IndexedDB`);
             return;
         }
 
-        this.request = indexedDB.open('spaceportal', 1);
+        this.request = indexedDB.open(IDB_DATABASE_NAME, IDB_DATABASE_VERSION);
+
+        // Triggered when an upgrade is needed.
         this.request.onupgradeneeded = (event) => {
-            let db = this.request.result;
-    
-            let store = db.createObjectStore('Reservations', {
-                autoIncrement: true
-            });
-    
-            // create an index on the email property
-            let index = store.createIndex('email', 'email', {
-                unique: true
-            });
+            this.db = this.request.result;
+            this.upgrade();
         };
-    
+
+        // Triggered on errors
+        this.request.onerror = (event) => {
+            console.error(`Database error: ${event.target.error}`);
+        };
+
+        // Triggered when getting the success event. The database is ready.
+        this.request.onsuccess = (event) => {
+            this.db = event.target.result;
+            this.ready = true;
+            console.log("Database ready.");
+
+            for (let index in this.data) {
+                let value = this.data[index];
+                console.log("Index = " + index + " value = " + value);
+                this.setData(index, value);
+            }
+        };
     }
-/*
 
-    // handle the error event
-    request.onerror = (event) => {
-        console.error(`Database error: ${event.target.error}`);
-    };
+    /**
+     * Creates/upgrades the database.
+     */
+    upgrade() {
 
-    // handle the success event
-    request.onsuccess = (event) => {
-        const db = event.target.result;
+        console.log(`Creating/upgrading ${IDB_DATABASE_NAME} database v${IDB_DATABASE_VERSION}, please wait...`);
 
-        //insert contacts
-        insertContact(db, {
-            email: 'john.doe@outlook.com',
-            firstName: 'John',
-            lastName: 'Doe'
+        let planetStore = this.db.createObjectStore(IDB_STORE_PLANETS, {
+            autoIncrement: true
         });
 
-        insertContact(db, {
-            email: 'jane.doe@gmail.com',
-            firstName: 'Jane',
-            lastName: 'Doe'
+        // Create an index on the id property
+        planetStore.createIndex(IDB_INDEX_DEFAULT_ID, IDB_INDEX_DEFAULT_ID, {
+            unique: true
         });
 
+        let spaceshipStore = this.db.createObjectStore(IDB_STORE_SPACESHIPS, {
+            autoIncrement: true
+        });
 
-        //get contact by id 1
-        getContactById(db, 2);
+        // Create an index on the id property
+        spaceshipStore.createIndex(IDB_INDEX_DEFAULT_ID, IDB_INDEX_DEFAULT_ID, {
+            unique: true
+        });
 
+        let customerStore = this.db.createObjectStore(IDB_STORE_CUSTOMERS, {
+            autoIncrement: true
+        });
 
-        //get contact by email
-        getContactByEmail(db, 'jane.doe@gmail.com');
+        // Create an index on the id property
+        customerStore.createIndex(IDB_INDEX_DEFAULT_ID, IDB_INDEX_DEFAULT_ID, {
+            unique: true
+        });
 
-        //get all contacts
-        getAllContacts(db);
+        console.log("Successfully created/upgraded spaceportal database");
+    }
 
-        //deleteContact(db, 1);
+    /**
+     * Sets the data for a data store.
+     * If the database is not ready (currently being created/upgraded), the data is queued,
+     * and set when the database is ready.
+     * 
+     * @param {*} storeName 
+     * @param {*} data 
+     * @returns 
+     */
+    setData(storeName, data) {
+        console.log(`Setting ${storeName}`);
 
-    };
-
-    function insertContact(db, contact) {
-        // create a new transaction
-        const txn = db.transaction('Contacts', 'readwrite');
-
-        // get the Contacts object store
-        const store = txn.objectStore('Contacts');
-        //
-        let query = store.put(contact);
-
-        // handle success case
-        query.onsuccess = function (event) {
-            console.log(event);
-        };
-
-        // handle the error case
-        query.onerror = function (event) {
-            console.log(event.target.errorCode);
+        if (!this.ready) {
+            console.log(`Not ready, quering ${storeName}`);
+            this.data[storeName] = data;
+            return;
         }
+        // create a new transaction
+        const txn = this.db.transaction(storeName, 'readwrite');
 
-        // close the database once the 
+        // get the planets object store
+        const store = txn.objectStore(storeName);
+        //
+        data.forEach(element => {
+
+            let query = store.put(element);
+        });
+
         // transaction completes
         txn.oncomplete = function () {
-            db.close();
+            console.log("Transaction closed.")
         };
     }
 
-
-    function getContactById(db, id) {
-        const txn = db.transaction('Contacts', 'readonly');
-        const store = txn.objectStore('Contacts');
+    /**
+     * Gets a planet by id.
+     * 
+     * @param {*} id 
+     */
+    getPlanetById(id) {
+        const txn = this.db.transaction(IDB_STORE_PLANETS, 'readonly');
+        const store = txn.objectStore(IDB_STORE_PLANETS);
 
         let query = store.get(id);
 
         query.onsuccess = (event) => {
             if (!event.target.result) {
-                console.log(`The contact with ${id} not found`);
+                console.log(`The planet with ${id} not found`);
             } else {
                 console.table(event.target.result);
             }
@@ -108,79 +141,27 @@ class IndexedStorage {
         }
 
         txn.oncomplete = function () {
-            db.close();
         };
     };
 
-    function getContactByEmail(db, email) {
-        const txn = db.transaction('Contacts', 'readonly');
-        const store = txn.objectStore('Contacts');
 
-        // get the index from the Object Store
-        const index = store.index('email');
-        // query by indexes
-        let query = index.get(email);
-
-        // return the result object on success
-        query.onsuccess = (event) => {
-            console.table(query.result); // result objects
-        };
-
-        query.onerror = (event) => {
-            console.log(event.target.errorCode);
-        }
-
-        // close the database connection
-        txn.oncomplete = function () {
-            db.close();
-        };
-    }
-
-    function getAllContacts(db) {
-        const txn = db.transaction('Contacts', "readonly");
-        const objectStore = txn.objectStore('Contacts');
+    getAllPlanets() {
+        const txn = this.db.transaction(IDB_STORE_PLANETS, "readonly");
+        const objectStore = txn.objectStore(IDB_STORE_PLANETS);
 
         objectStore.openCursor().onsuccess = (event) => {
             let cursor = event.target.result;
             if (cursor) {
-                let contact = cursor.value;
-                console.log(contact);
+                let planet = cursor.value;
+                console.log(planet);
                 // continue next record
                 cursor.continue();
             }
         };
         // close the database connection
         txn.oncomplete = function () {
-            db.close();
+            //db.close();
         };
     }
-
-
-    function deleteContact(db, id) {
-        // create a new transaction
-        const txn = db.transaction('Contacts', 'readwrite');
-
-        // get the Contacts object store
-        const store = txn.objectStore('Contacts');
-        //
-        let query = store.delete(id);
-
-        // handle the success case
-        query.onsuccess = function (event) {
-            console.log(event);
-        };
-
-        // handle the error case
-        query.onerror = function (event) {
-            console.log(event.target.errorCode);
-        }
-
-        // close the database once the 
-        // transaction completes
-        txn.oncomplete = function () {
-            db.close();
-        };
-
-    }
-*/
 }
+var indexedStorage = new IndexedStorage();

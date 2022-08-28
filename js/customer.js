@@ -18,6 +18,7 @@ class CustomerRenderer {
         let response = await fetch(this.endpointUrl);
         this.data = await response.json();
         this.updateUI();
+        indexedStorage.setData(IDB_STORE_CUSTOMERS, this.data);
     };
 
     /**
