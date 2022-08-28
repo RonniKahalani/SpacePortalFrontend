@@ -193,7 +193,7 @@
                                 <td id="planet-type"></td>
                             </tr>
                             <tr>
-                                <th>Mass (10<sub>24</sub>kg)</th>
+                                <th>Mass (10<sup>24</sup> kg)</th>
                                 <td id="planet-mass"></td>
                             </tr>
                             <tr>
@@ -213,7 +213,7 @@
                                 <td id="planet-hoursperday" style="text-align:right;"></td>
                             </tr>
                             <tr>
-                                <th>From Sun (10<sup>6</sup>km)</th>
+                                <th>From Sun (10<sup>6</sup> km)</th>
                                 <td id="planet-distance" style="text-align:right;margin-right:20px;"></td>
                             </tr>
                             <tr>
@@ -310,11 +310,12 @@
                                     <td id="iss-units"></td>
                                 </tr>
                             </table>
+
                             <!-- Default unchecked -->
                             <div class="custom-control custom-checkbox">
                                 <div class="w-100">
-                                    <input id="iss-autofetch" type="checkbox" class="custom-control-input">
-                                    <label class="custom-control-label" for="iss-autofetch">Update
+                                    <input id="iss-autofetch" type="checkbox" class="custom-control-input form-check-input">
+                                    <label class="custom-control-label form-check-label" for="iss-autofetch">Update
                                         automatically.</label>
                                 </div>
                             </div>
@@ -460,10 +461,10 @@
                     <div id="card" class="col rounded btn-dark">
                         <div id="message-heading" class="panel-heading row mt-2 mb-2">
                             <div class="col">
-                                <h5 class="panel-title">Share a thought (<span id="message-count">0</span>)</h5>
+                                <h5 class="panel-title">Share a thought <span id="message-count" class="badge btn-primary">0</span></h5>
                             </div>
                             <div class="col" style="text-align: right;color:white;">
-                                <button id="message-panel-button" type="button" class="col btn-primary"
+                                <button id="message-panel-button" type="button" class="col badge btn-primary"
                                     onclick="$('#message-panel').toggle()">-</button>
                             </div>
 
@@ -473,12 +474,12 @@
                             <div id="messages" class="container overflow-auto scrollbar" style="max-height:400px;">
                             </div>
 
-                            <div class="row border m-2 rounded p-2">
+                            <div class="row border m-2 rounded p-2 form-group">
 
                                 <div class="col">
-                                    <label for="message">Text</label><input id="message" class="w-100" name="message">
-                                    <label for="image">Image</label><input id="image" class="w-100" name="image">
-                                    <label for="link">Link</label><input id="link" class="w-100" name="link">
+                                    <label for="message" class="form-label">Text (use ALT+ENTER in text field to send)</label><textarea id="message" class="w-100 form-control" name="message"></textarea>
+                                    <label for="image" class="form-label">Image</label><input id="image" class="w-100 form-control" name="image">
+                                    <label for="link" class="form-label">Link</label><input id="link" class="w-100 form-control" name="link">
                                 </div>
                                 <div class="m-2">
 

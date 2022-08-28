@@ -24,19 +24,19 @@ let connectedClients = [];
 
 // Triggered when a new client connects. 
 wsServer.on('connection', (ws, req) => {
-    // add new connected client
+    // Add newly connected client to the list of clients.
     connectedClients.push(ws);
     console.log(`----------`);
-    console.log(`New connection: connections:${connectedClients.length}`);
-    console.log(`----------`);
+    console.log(`New connection: Total:${connectedClients.length}`);
 
     // Triggered when clients sends a message.
     ws.on('message', data => {
 
         console.log(`----------`);
-        console.log(`Sending message: connections:${connectedClients.length}`);
-        console.log(`${data}`);
-        console.log(`----------`);
+        console.log(`Sending message to ${connectedClients.length} connection(s)`);
+
+        let pretty = JSON.stringify(JSON.parse(data),null,2); 
+        console.log(`${pretty}`);
     
         // Send the base64 encoded frame to each connected ws
         connectedClients.forEach((ws, i) => {
@@ -48,19 +48,18 @@ wsServer.on('connection', (ws, req) => {
             } else { // if it's not connected remove from the array of connected ws
                 connectedClients.splice(i, 1);
                 console.log(`----------`);
-                console.log(`Removed inactive connection: connections:${connectedClients.length}`);
-                console.log(`----------`);
+                console.log(`Removed an inactive connection: Total active clients:${connectedClients.length}`);
             }
         });
     });
 
     // Triggered an error occurs.
     ws.on('error', error => {
-        console.log(`error happend: ${error}`)
+        console.log(`An error happend: ${error}`)
     });
 });
 
-// HTTP server examplesetup
+// HTTP server example setup.
 let clientCount = {"clientCount":connectedClients.length, "test": 3};
 app.get('/messages', (req, res) => res.json(clientCount));
 //app.get('/about', (req, res) => res.sendFile(path.resolve(__dirname, './about.html')));

