@@ -1,15 +1,23 @@
 'use strict'
-
+/**
+ * Acts as a messaging client to the server.js counterpart.
+ */
 class SocketClient {
 
     endpointUrl = 'ws://localhost:3001';
 
+    /**
+     * Constructor
+     */
     constructor() {
         this.messageCounter = 0;
         this.WS_URL = this.endpointUrl;
         this.ws = new WebSocket(this.WS_URL);
 
+        // Called when a connection, to the server, is open.
         this.ws.onopen = () => console.log(`Connected to ${this.WS_URL}`);
+
+        // Called when a message arrives from the server.
         this.ws.onmessage = (ev) => {
             let packet = JSON.parse(ev.data);
 
@@ -78,7 +86,11 @@ class SocketClient {
         }
     }
 
-
+    /**
+     * Tracks the input for the ENTER key, and sends the message on ENTER key up.
+     * @param {*} input 
+     * @param {*} e 
+     */
     trackInputKey(input, e) {
         let isDisabled = input.val().length == 0;
         let btn = $('#message-button');
@@ -87,13 +99,14 @@ class SocketClient {
         if (e.key == 'Enter') {
             this.send(userId, $('#message').val(), $('#image').val(), $('#link').val());
         }
-
     }
 
-
+    /**
+     * Disconnects the WebSocket connection, is typically by a window.unload event. 
+     */
     disconnect() {
         if (this.ws.readyState == WebSocket.OPEN) {
-            ws.close();
+            this.ws.close();
         }
     }
 }
