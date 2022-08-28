@@ -103,17 +103,41 @@ class IndexedStorage {
         // create a new transaction
         const txn = this.db.transaction(storeName, 'readwrite');
 
-        // get the planets object store
+        // Get the relevant object store
         const store = txn.objectStore(storeName);
-        //
-        data.forEach(element => {
 
-            let query = store.put(element);
+        // Iterate through all the data elements and put them in the store.
+        data.forEach(element => {
+            let foundQuery = store.get(element.id);
+
+            foundQuery.onerror = (event) => {
+
+                //console.log(`Failed to get store data`);
+                
+            };
+
+            foundQuery.onsuccess = (event) => {
+                if (!event.target.result) {
+                    
+                    let query = store.put(element);
+                    
+                    query.onsuccess = (event) => {
+                        //console.table(event.target.result);
+                    };
+                    
+                    query.onerror = (event) => {
+                        //console.log(event.target.errorCode);
+                    }
+                } else {
+                    
+                    //console.log(`${element} already exists`);
+                }
+            };
         });
 
         // transaction completes
         txn.oncomplete = function () {
-            console.log("Transaction closed.")
+            //console.log("Transaction closed.")
         };
     }
 
