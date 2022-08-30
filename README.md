@@ -18,9 +18,12 @@ jQuery / ES6 JavaScript (dynamics design)
 -   [iss.js](https://github.com/RonniKahalani/SpacePortalFrontend/blob/master/js/iss.js)
 -   [reservation.js](https://github.com/RonniKahalani/SpacePortalFrontend/blob/master/js/reservation.js)
 
+jQuery
+- [jquery.js](https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.js)
+
 Bootstrap 5 (UI design)
--  bootstrap.js
--  bootstrap.css
+-  [bootstrap.js](https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.js)
+-  [bootstrap.css](https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.css)
 
 Node.js (for websocket medie chat for connected browsers)
 -  [server.js](https://github.com/RonniKahalani/SpacePortalFrontend/blob/master/js/server.js)
