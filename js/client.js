@@ -13,7 +13,7 @@ class SocketClient {
         this.messageCounter = 0;
         this.WS_URL = this.endpointUrl;
         this.ws = new WebSocket(this.WS_URL);
-
+        
         // Called when a connection, to the server, is open.
         this.ws.onopen = () => console.log(`Connected to ${this.WS_URL}`);
 
@@ -95,9 +95,7 @@ class SocketClient {
      * @param {*} e 
      */
     trackInputKey(input, e) {
-        let isDisabled = input.val().length == 0;
-        let btn = $('#message-button');
-        btn.prop('disabled', isDisabled);
+        $('#message-button').prop('disabled', input.val().length == 0);
 
         if (e.key == 'Enter' && e.altKey) {
             this.send(userId, $('#message').val(), $('#image').val(), $('#link').val());
