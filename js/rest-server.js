@@ -1,7 +1,7 @@
 'use strict'
 
 /**
- * Acts as a messaging server, waiting for WebSocket client connections.
+ * Acts as a rest server for the space portal..
  */
 // File O/I feature.
 const fs = require('fs');
