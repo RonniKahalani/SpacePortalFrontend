@@ -4,7 +4,6 @@
  * Acts as a messaging server, waiting for WebSocket client connections.
  */
 // File O/I feature.
-const path = require('path');
 const fs = require('fs');
 // Web server feature.
 const express = require('express');
