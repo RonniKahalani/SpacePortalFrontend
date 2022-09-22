@@ -9,9 +9,17 @@ class ReservationRenderer {
     }
 
     async fetchData() {
-        let response = await fetch(this.endpointUrl);
-        this.data = await response.json();
-        this.updateUI();
+        try {
+         let response = await fetch(this.endpointUrl);
+         this.data = await response.json();
+
+         // Cool, we got the data, let's update the page.
+         this.updateUI();
+
+        } catch(error) {
+            // Could not connect, try using the last data, we saved last time we were connected to remote endpoint.
+            console.log(`Failed getting data from remote endpoint ${this.endpointUrl}.`);
+        }
     };
 
     updateUI() {}

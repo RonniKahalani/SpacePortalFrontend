@@ -169,14 +169,16 @@ class IndexedStorage {
     };
 
 
-    getAllPlanets() {
+    getAllPlanets(callbackFunc) {
         const txn = this.db.transaction(IDB_STORE_PLANETS, "readonly");
         const objectStore = txn.objectStore(IDB_STORE_PLANETS);
 
+        let result = [];
         objectStore.openCursor().onsuccess = (event) => {
             let cursor = event.target.result;
             if (cursor) {
                 let planet = cursor.value;
+                result[result.length] = planet;
                 console.log(planet);
                 // continue next record
                 cursor.continue();
@@ -185,6 +187,96 @@ class IndexedStorage {
         // close the database connection
         txn.oncomplete = function () {
             //db.close();
+            callbackFunc(result);
+        };
+    }
+    // Customers
+    
+    /**
+     * Gets a customer by id.
+     * 
+     * @param {*} id 
+     */
+     getCustomerById(id) {
+        const txn = this.db.transaction(IDB_STORE_CUSTOMERS, 'readonly');
+        const store = txn.objectStore(IDB_STORE_CUSTOMERS);
+
+        let query = store.get(id);
+
+        query.onsuccess = (event) => {
+            if (!event.target.result) {
+                console.log(`The customer with ${id} not found`);
+            } else {
+                console.table(event.target.result);
+            }
+        };
+
+        query.onerror = (event) => console.log(event.target.errorCode);
+        txn.oncomplete = function () {};
+    };
+
+
+    getAllCustomers(callbackFunc) {
+        const txn = this.db.transaction(IDB_STORE_CUSTOMERS, "readonly");
+        const objectStore = txn.objectStore(IDB_STORE_CUSTOMERS);
+
+        let result = [];
+        objectStore.openCursor().onsuccess = (event) => {
+            let cursor = event.target.result;
+            if (cursor) {
+                result[result.length] = cursor.value;
+                cursor.continue();
+            }
+        };
+        // close the database connection
+        txn.oncomplete = function () {
+            //db.close();
+            callbackFunc(result);
+        };
+    }
+
+    // Spaceships
+    
+    /**
+     * Gets a planet by id.
+     * 
+     * @param {*} id 
+     */
+     getSpaceshipById(id) {
+        const txn = this.db.transaction(IDB_STORE_SPACESHIPS, 'readonly');
+        const store = txn.objectStore(IDB_STORE_SPACESHIPS);
+
+        let query = store.get(id);
+
+        query.onsuccess = (event) => {
+            if (!event.target.result) {
+                console.log(`The spaceship with ${id} not found`);
+            } else {
+                console.table(event.target.result);
+            }
+        };
+
+        query.onerror = (event) => console.log(event.target.errorCode);
+        txn.oncomplete = function () {};
+    };
+
+
+    getAllSpaceships(callbackFunc) {
+        const txn = this.db.transaction(IDB_STORE_SPACESHIPS, "readonly");
+        const objectStore = txn.objectStore(IDB_STORE_SPACESHIPS);
+
+        let result = [];
+        objectStore.openCursor().onsuccess = (event) => {
+            let cursor = event.target.result;
+            if (cursor) {
+                result[result.length] = cursor.value;
+                cursor.continue();
+            }
+        };
+        // close the database connection
+        txn.oncomplete = function () {
+            //db.close();
+            callbackFunc(result);
         };
     }
 }

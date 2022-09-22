@@ -18,13 +18,34 @@ class PlanetRenderer {
      * Fetches Json from REST service endpoint url.
      */
     async fetchData() {
-        let response = await fetch(this.endpointUrl);
-        this.data = await response.json();
-        this.updateUI();
-        this.setPlanetData(3);
-        indexedStorage.setData(IDB_STORE_PLANETS, this.data);
+
+        try {
+            let response = await fetch(this.endpointUrl);
+            this.data = await response.json();
+
+            // Cool, we got the data, let's save it in local storage.
+            indexedStorage.setData(IDB_STORE_PLANETS, this.data);
+            // Lets update the page and set a default planet.
+            this.updateUI();
+            this.setPlanetData(3);    
+
+        } catch(error) {
+            // Could not connect, try using the last data, we saved last time we were connected to remote endpoint.
+            console.log(`Failed getting data from remote endpoint ${this.endpointUrl}, reading from local storage data.`);
+            indexedStorage.getAllPlanets((result) => this.updateFromStorage(result));    
+        }
     };
 
+    /**
+     * Callback function for returning the local storage data version.
+     * @param {*} data 
+     */
+    updateFromStorage(data) {
+        this.data = data;
+        this.updateUI();
+        this.setPlanetData(3);
+    }
+    
     /**
      * Updates related UI components
      */
