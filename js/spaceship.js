@@ -1,13 +1,22 @@
 'use strict'
-
+/**
+ * Handles the Spaceship UI
+ */
 class SpaceshipRenderer {
     endpointUrl = 'http://localhost:8080/api/v1/spaceships';
 
+    /**
+     * Constructor
+     * @param {*} data 
+     */
     constructor(data) {
         this.data = data;
         this.fetchData();
     }
 
+    /**
+     * Fetches Json from REST service endpoint url.
+     */
     async fetchData() {
         try {
             let response = await fetch(this.endpointUrl);
@@ -33,7 +42,7 @@ class SpaceshipRenderer {
      updateFromStorage(data) {
         this.data = data;
         this.updateUI();
-        this.setPlanetData(3);
+        this.setSpaceshipData(0, false, false);
     }
     
     updateUI() {

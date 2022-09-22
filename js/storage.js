@@ -1,11 +1,14 @@
 'use strict'
-
+/**
+ * Handles the local spaceportal JSON storage
+ */
 var IDB_DATABASE_NAME = "spaceportal";
 var IDB_DATABASE_VERSION = 1;
 var IDB_STORE_PLANETS = "planets";
 var IDB_STORE_SPACESHIPS = "spaceships";
 var IDB_STORE_CUSTOMERS = "customers";
 var IDB_INDEX_DEFAULT_ID = "id";
+var IDB_MODE_READWRITE = 'readonly';
 
 class IndexedStorage {
 
@@ -101,7 +104,7 @@ class IndexedStorage {
             return;
         }
         // create a new transaction
-        const txn = this.db.transaction(storeName, 'readwrite');
+        const txn = this.db.transaction(storeName, IDB_MODE_READWRITE);
 
         // Get the relevant object store
         const store = txn.objectStore(storeName);
@@ -110,35 +113,24 @@ class IndexedStorage {
         data.forEach(element => {
             let foundQuery = store.get(element.id);
 
-            foundQuery.onerror = (event) => {
-
-                //console.log(`Failed to get store data`);
-                
-            };
+            foundQuery.onerror = (event) => console.log(`Failed to get store data: ${event}`);
 
             foundQuery.onsuccess = (event) => {
                 if (!event.target.result) {
                     
                     let query = store.put(element);
                     
-                    query.onsuccess = (event) => {
-                        //console.table(event.target.result);
-                    };
-                    
-                    query.onerror = (event) => {
-                        //console.log(event.target.errorCode);
-                    }
+                    query.onsuccess = (event) => console.table(event.target.result);
+                    query.onerror = (event) => console.log(event.target.errorCode);
+
                 } else {
-                    
-                    //console.log(`${element} already exists`);
+                    console.log(`${element} already exists`);
                 }
             };
         });
 
         // transaction completes
-        txn.oncomplete = function () {
-            //console.log("Transaction closed.")
-        };
+        txn.oncomplete = () => console.log("Transaction closed.");
     }
 
     /**
@@ -147,7 +139,7 @@ class IndexedStorage {
      * @param {*} id 
      */
     getPlanetById(id) {
-        const txn = this.db.transaction(IDB_STORE_PLANETS, 'readonly');
+        const txn = this.db.transaction(IDB_STORE_PLANETS, IDB_MODE_READWRITE);
         const store = txn.objectStore(IDB_STORE_PLANETS);
 
         let query = store.get(id);
@@ -168,29 +160,25 @@ class IndexedStorage {
         };
     };
 
-
+    /**
+     * Gets all planets and calls the passed function with the result.
+     * @param {*} callbackFunc 
+     */
     getAllPlanets(callbackFunc) {
-        const txn = this.db.transaction(IDB_STORE_PLANETS, "readonly");
+        const txn = this.db.transaction(IDB_STORE_PLANETS, IDB_MODE_READWRITE);
         const objectStore = txn.objectStore(IDB_STORE_PLANETS);
 
         let result = [];
         objectStore.openCursor().onsuccess = (event) => {
             let cursor = event.target.result;
             if (cursor) {
-                let planet = cursor.value;
-                result[result.length] = planet;
-                console.log(planet);
-                // continue next record
+                result[result.length] = cursor.value;
                 cursor.continue();
             }
         };
-        // close the database connection
-        txn.oncomplete = function () {
-            //db.close();
-            callbackFunc(result);
-        };
+
+        txn.oncomplete = () =>  callbackFunc(result);
     }
-    // Customers
     
     /**
      * Gets a customer by id.
@@ -198,7 +186,7 @@ class IndexedStorage {
      * @param {*} id 
      */
      getCustomerById(id) {
-        const txn = this.db.transaction(IDB_STORE_CUSTOMERS, 'readonly');
+        const txn = this.db.transaction(IDB_STORE_CUSTOMERS, IDB_MODE_READWRITE);
         const store = txn.objectStore(IDB_STORE_CUSTOMERS);
 
         let query = store.get(id);
@@ -215,9 +203,12 @@ class IndexedStorage {
         txn.oncomplete = function () {};
     };
 
-
+    /**
+     * Gets all customers and calls the passed function with the result.
+     * @param {*} callbackFunc 
+     */
     getAllCustomers(callbackFunc) {
-        const txn = this.db.transaction(IDB_STORE_CUSTOMERS, "readonly");
+        const txn = this.db.transaction(IDB_STORE_CUSTOMERS, IDB_MODE_READWRITE);
         const objectStore = txn.objectStore(IDB_STORE_CUSTOMERS);
 
         let result = [];
@@ -228,22 +219,17 @@ class IndexedStorage {
                 cursor.continue();
             }
         };
-        // close the database connection
-        txn.oncomplete = function () {
-            //db.close();
-            callbackFunc(result);
-        };
+
+        txn.oncomplete = () => callbackFunc(result);
     }
 
-    // Spaceships
-    
     /**
-     * Gets a planet by id.
+     * Gets a spaceship by id.
      * 
      * @param {*} id 
      */
      getSpaceshipById(id) {
-        const txn = this.db.transaction(IDB_STORE_SPACESHIPS, 'readonly');
+        const txn = this.db.transaction(IDB_STORE_SPACESHIPS, IDB_MODE_READWRITE);
         const store = txn.objectStore(IDB_STORE_SPACESHIPS);
 
         let query = store.get(id);
@@ -260,9 +246,12 @@ class IndexedStorage {
         txn.oncomplete = function () {};
     };
 
-
+    /**
+     * Gets all spaceships and calls the passed function with the result.
+     * @param {*} callbackFunc 
+     */
     getAllSpaceships(callbackFunc) {
-        const txn = this.db.transaction(IDB_STORE_SPACESHIPS, "readonly");
+        const txn = this.db.transaction(IDB_STORE_SPACESHIPS, IDB_MODE_READWRITE);
         const objectStore = txn.objectStore(IDB_STORE_SPACESHIPS);
 
         let result = [];
@@ -273,11 +262,8 @@ class IndexedStorage {
                 cursor.continue();
             }
         };
-        // close the database connection
-        txn.oncomplete = function () {
-            //db.close();
-            callbackFunc(result);
-        };
+
+        txn.oncomplete = () => callbackFunc(result);
     }
 }
 var indexedStorage = new IndexedStorage();

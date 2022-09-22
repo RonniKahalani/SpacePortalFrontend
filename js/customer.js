@@ -1,5 +1,7 @@
 'use strict'
-
+/**
+ * Handles the Customer UI
+ */
 class CustomerRenderer {
     endpointUrl = 'http://localhost:8080/api/v1/customers';
 

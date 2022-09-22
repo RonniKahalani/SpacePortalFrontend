@@ -1,13 +1,21 @@
 'use strict'
-
+/**
+ * Handles the Reservation UI
+ */
 class ReservationRenderer {
     endpointUrl = 'http://localhost:8080/api/v1/reservations';
 
+    /**
+     * Constructor
+     */
     constructor(data) {
         this.data = data;
         this.fetchData();
     }
 
+    /**
+     * Fetches Json from REST service endpoint url.
+     */
     async fetchData() {
         try {
          let response = await fetch(this.endpointUrl);
