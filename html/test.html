@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script type="text/javascript">
+
+        async function fetchData() {
+
+
+            let loginResponse = await fetch("http://localhost:8080/login",
+                {
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    method: "POST",
+                    body: JSON.stringify(
+                        {
+                            username: "randomuser123",
+                            password: "password"
+                        }
+                    )
+                });
+
+            let loginData = await loginResponse.json();
+            console.log(loginData);
+
+            let token = loginData.token;
+            //'Authentication': `Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJyYW5kb211c2VyMTIzIiwiZXhwIjoxNjY0NDc4MTUxLCJpYXQiOjE2NjQ0NDIxNTF9.B7SdMq58O95RgXocfXX4NSrfOOvBp8Io2WUO-830-KOsr8wueY0GOVcA-fyKSiMlGOuI5J3_1z6AEgPfAwu4PQ'
+
+            /*
+            const helloHeaders = new Headers();
+            helloHeaders.set('Content-Type', 'application/json;charset=UTF-8')
+            helloHeaders.append('Content-type', 'application/json;charset=UTF-8')
+            helloHeaders.append('Accept','application/json')
+            helloHeaders.append('Access-Control-Allow-Origin', '*')
+            helloHeaders.append('Authentication', `Bearer ${token}`)
+            helloHeaders.append('Origin', '')
+            helloHeaders.append('Accept-Encoding', 'gzip, deflate, br')
+            helloHeaders.append('Access-Control-Request-Headers', 'Authorization')
+*/
+
+            
+  const helloHeaders =  {
+                        'Host' : 'localhost:8080',
+                        'Origin': '',
+                        'Access-Control-Request-Headers': 'Authorization',
+                        'Access-Control-Allow-Origin':'*',
+                        'Accept-Encoding': 'gzip, deflate, br',
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'Authentication': `Bearer ${token}`
+                    }
+            
+
+            let helloResponse = await fetch("http://localhost:8080/hello",
+            
+                {
+                    headers: helloHeaders,
+                    mode: 'no-cors',
+                    method: "GET",
+                    cache: "no-cache"
+                });
+
+            let helloData = await helloResponse.json();
+
+            console.log("Done");
+            /*
+                        let helloData = await helloResponse.json();
+                        console.log(helloData);
+              */          /* 
+                    
+                            let token = window.btoa("test@admin.com:testadmin");
+                            let header = {
+                                headers: {
+                                    "Accept":"application/json",
+                                    "Content-type": "application/json",
+                                    "Authentication": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJyYW5kb211c2VyMTIzIiwiZXhwIjoxNjY0NDc4MTUxLCJpYXQiOjE2NjQ0NDIxNTF9.B7SdMq58O95RgXocfXX4NSrfOOvBp8Io2WUO-830-KOsr8wueY0GOVcA-fyKSiMlGOuI5J3_1z6AEgPfAwu4PQ",
+                                 }
+                            }
+                            try {
+                             let response = await fetch("http://localhost:8080/login");
+                            } catch(error) {
+                                console.log(error);
+                            }
+                    
+                            let header2 = {
+                                headers: {
+                                    "Accept":"application/json",
+                                    "Content-type": "application/json",
+                                    "Authentication": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJyYW5kb211c2VyMTIzIiwiZXhwIjoxNjY0NDc4MTUxLCJpYXQiOjE2NjQ0NDIxNTF9.B7SdMq58O95RgXocfXX4NSrfOOvBp8Io2WUO-830-KOsr8wueY0GOVcA-fyKSiMlGOuI5J3_1z6AEgPfAwu4PQ",
+                                 }
+                            }
+                             let data = await response.json();
+                             console.log(JSON.stringify(data)); */
+        }
+        fetchData();
+    </script>
+</body>
+
+</html>
