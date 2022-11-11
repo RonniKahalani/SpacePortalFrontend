@@ -39,6 +39,6 @@ The frontend app fetches:
 - Customer, planet, spaceship and reservation data, from our own backend.
 
 # Starting the WebSocket chat server
-- Open a Terminal window in VS Code
+- Open a Terminal window in VS Code.
 - Navigate to the /js folder.
 - Write "node server.js" and the chat server should be running. 
