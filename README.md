@@ -37,3 +37,8 @@ The frontend app fetches:
 - [Unofficial SpaceX Launch data](https://api.spacexdata.com/v2/launches), from a REST API
 - [ISS - International Space Station data](https://api.wheretheiss.at/v1/satellites/25544), from a REST API
 - Customer, planet, spaceship and reservation data, from our own backend.
+
+# Starting the WebSocket chat server
+- Open a Terminal window in VS Code
+- Navigate to the /js folder.
+- Write "node server.js" and the chat server should be running. 
