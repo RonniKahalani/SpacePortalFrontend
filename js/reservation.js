@@ -8,8 +8,8 @@ class ReservationRenderer {
     /**
      * Constructor
      */
-    constructor(data) {
-        this.data = data;
+    constructor() {
+        this.data = null;
         this.fetchData();
     }
 

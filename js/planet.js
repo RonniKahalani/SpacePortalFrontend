@@ -7,10 +7,9 @@ class PlanetRenderer {
 
     /**
      * Constructor
-     * @param {*} data 
      */
-    constructor(data) {
-        this.data = data;
+    constructor() {
+        this.data = null;
         this.fetchData();
     }
 
